@@ -1,5 +1,6 @@
 # Import's usados
 from random import sample
+import builtins
 
 # Exceções Personalizadas
 class VerificaError(Exception):
@@ -15,19 +16,22 @@ def preenche_cartela():
     
     return cartela
 
-def exibe_cartela(cartela):
+def exibe_cartela(cartela, jogador):
     '''Exibe matriz estilizada'''
 
     print()
-    print("+---------------------+")
+    print(f"Cartela do jogador {jogador}:")
+    print("+----------------------+")
     for i in range(5):
-        print("|", end=" ")
+        print("|", end="  ")
         for j in range(5):
-            print(f"{cartela[j][i]:02}", end="  ")
+            if type(cartela[j][i]) == int:
+                print(f"{cartela[j][i]:02}", end="  ")
+            else:
+                print(f"{cartela[j][i]}", end="  ")
         print("|")
-    print("+---------------------+")
+    print("+----------------------+")
     print()
-
     return cartela
 
 def valida_numero(cartela, sorteia):
@@ -35,7 +39,11 @@ def valida_numero(cartela, sorteia):
     for i in range(len(cartela)):
         for j in range(len(cartela[i])):
             if cartela[i][j] == sorteia:
-                cartela[i][j] = "X" 
+                cartela[i][j] = "XX"
+
+def verifica_ganhador():
+    '''Função que verifica o ganhador'''
+
 
 def menu():
     print('''Bem-vindo ao Bingorama!!
@@ -49,15 +57,17 @@ Digite a quantidade de jogadores abaixo''')
             if jogadores <= 0 or jogadores > 5:
                 raise VerificaError
             
+            jogadores_etiquetas = [f"Jogador {i + 1}" for i in range(jogadores)]
+
             cartelas = [preenche_cartela() for y in range(jogadores)]
             
             while True:
                 sorteia = sample(range(1, 76), 1)[0]
                 
 
-                for cartela in cartelas:
-                    exibe_cartela(cartela)
-                    valida_numero(cartela, sorteia)
+                for i in range(jogadores):
+                    exibe_cartela(cartelas[i], jogadores_etiquetas[i])
+                    valida_numero(cartelas[i], sorteia)
                 print(f"Número sorteado: {sorteia}")
                     
                 continuar = input("Deseja continuar? (S para sim, qualquer tecla para sair): ")
