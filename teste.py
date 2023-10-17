@@ -1,3 +1,4 @@
+''''''
 # Import's usados
 from random import sample
 
