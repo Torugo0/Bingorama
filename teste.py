@@ -1,10 +1,12 @@
-''''''
 # Import's usados
 from random import sample
 
 # Exceções Personalizadas
 class VerificaError(Exception):
     pass 
+
+class ContinueError(Exception):
+    pass
 
 def preenche_cartela():
     '''Função que gera a cartela de bingo com números aleatórios'''
@@ -16,19 +18,19 @@ def preenche_cartela():
     
     return cartela
 
-def exibe_cartela(cartela):
-    '''Exibe matriz estilizada'''
+def exibe_cartela(cartela, jogador):
+    '''Função que exibe cartela estilizada'''
 
     print()
-    print("+---------------------+")
+    print(f"Cartela do jogador {jogador}:")
+    print("+----------------------+")
     for i in range(5):
-        print("|", end=" ")
+        print("|", end="  ")
         for j in range(5):
             print(f"{cartela[j][i]:02}", end="  ")
         print("|")
-    print("+---------------------+")
+    print("+----------------------+")
     print()
-
     return cartela
 
 def valida_numero(cartela, sorteia):
@@ -36,7 +38,34 @@ def valida_numero(cartela, sorteia):
     for i in range(len(cartela)):
         for j in range(len(cartela[i])):
             if cartela[i][j] == sorteia:
-                cartela[i][j] = "X" 
+                cartela[i][j] = "XX"
+
+def verifica_ganhador():
+    '''Função que verifica o ganhador'''
+
+
+
+def game(jogadores):
+    jogadores_etiquetas = [f"{i + 1}" for i in range(jogadores)]
+
+    cartelas = [preenche_cartela() for y in range(jogadores)]
+    
+    while True:
+        sorteia = sample(range(1, 76), 1)[0]
+        
+        for i in range(jogadores):
+            exibe_cartela(cartelas[i], jogadores_etiquetas[i])
+            valida_numero(cartelas[i], sorteia)
+        print(f"Número sorteado: {sorteia}")
+
+        while True:
+            try:  
+                continuar = input("Digite S para continuar: ")
+                if continuar.lower() != "s":
+                    raise ContinueError
+                break
+            except ContinueError:
+                print("Digite apenas S para continuar \n")
 
 def menu():
     print('''Bem-vindo ao Bingorama!!
@@ -49,24 +78,8 @@ Digite a quantidade de jogadores abaixo''')
             
             if jogadores <= 0 or jogadores > 5:
                 raise VerificaError
+            game(jogadores)
             
-            cartelas = [preenche_cartela() for y in range(jogadores)]
-            
-            while True:
-                sorteia = sample(range(1, 76), 1)[0]
-                
-
-                for cartela in cartelas:
-                    exibe_cartela(cartela)
-                    valida_numero(cartela, sorteia)
-                print(f"Número sorteado: {sorteia}")
-                    
-                continuar = input("Deseja continuar? (S para sim, qualquer tecla para sair): ")
-                if continuar.lower() != "s":
-                    break
-            
-            break
-        
         except ValueError:
             print("O valor informado não é um número\n")
         except VerificaError:
