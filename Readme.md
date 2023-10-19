@@ -22,6 +22,7 @@ Certifique-se de ter o Python instalado em seu sistema para executar o jogo. Al�
 
 - `random`: para gerar números aleatórios.
 - `json`: para salvar e carregar o ranking.
+- `os`: para criar a pasta necessária.
 
 ## Como Personalizar
 
@@ -34,3 +35,9 @@ Para desenvolvedores, o Bingorama é um ótimo exemplo de um jogo de bingo simpl
 Sinta-se à vontade para explorar o código-fonte do Bingorama e adaptá-lo de acordo com suas necessidades ou usá-lo como ponto de partida para outros projetos relacionados a jogos e sorteios.
 
 Divirta-se jogando Bingorama!
+
+
+## Autor
+
+[<img src="https://github.com/Torugo0.png" width="80">](https://github.com/Torugo0)  
+*Vitor Hugo*

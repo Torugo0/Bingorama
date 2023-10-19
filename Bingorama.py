@@ -1,14 +1,8 @@
-'''
-Integrantes:
-
-Vitor Hugo - 97758
-João Pedro de Souza - 99805
-'''
-
 # Import's usados
 import random 
 from random import sample
 import json
+import os
 
 # Exceções Personalizadas
 class VerificaError(Exception):
@@ -70,6 +64,9 @@ def verifica_ganhador(cartela):
     return False
 
 def criar_ranking(nome_ganhador):
+    if not os.path.exists('./JSON'):
+        os.makedirs('./JSON')
+
     try:
         with open('./JSON/ranking.json', 'r', encoding='utf-8') as arquivo:
             ranking = json.load(arquivo)
