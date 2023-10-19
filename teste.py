@@ -1,5 +1,7 @@
 # Import's usados
+import random 
 from random import sample
+import json
 
 # Exceções Personalizadas
 class VerificaError(Exception):
@@ -60,15 +62,45 @@ def verifica_ganhador(cartela):
 
     return False
 
+def criar_ranking(nome_ganhador):
+    try:
+        with open('./JSON/ranking.json', 'r', encoding='utf-8') as arquivo:
+            ranking = json.load(arquivo)
+    except FileNotFoundError:
+        ranking = {}
+
+    if nome_ganhador not in ranking:
+        ranking[nome_ganhador] = 1
+    else:
+        ranking[nome_ganhador] += 1
+    
+    with open('./JSON/ranking.json', 'w', encoding='utf-8') as arquivo:
+        json.dump(ranking, arquivo, indent=4, ensure_ascii=False)
+    
+    return ranking
+
+
+def exibe_ranking(nome_ganhador):
+    ranking = criar_ranking(nome_ganhador)
+
+    if ranking:
+        print("Ranking:")
+        for jogador, vitorias in sorted(ranking.items(), key=lambda item: item[1], reverse=True):
+            print(f"{jogador}\nVitórias: {vitorias}\n")
+    else:
+        print("O ranking está vazio.")
+
+
 def game(jogadores):
     jogadores_etiquetas = [f"Jogador {i + 1}" for i in range(jogadores)]
 
     cartelas = [preenche_cartela() for y in range(jogadores)]
 
-    vencedor = None
+    numeros = list(range(1, 76))
+    random.shuffle(numeros)
 
-    while vencedor is None:
-        sorteia = sample(range(1, 76), 1)[0]
+    while True:
+        sorteia = numeros.pop()
 
         for i in range(jogadores):
             exibe_cartela(cartelas[i], jogadores_etiquetas[i])
@@ -76,19 +108,24 @@ def game(jogadores):
 
         print(f"Número sorteado: {sorteia}")
 
+        while True:
+            try:
+                continuar = input("Digite S para continuar: ")
+                if continuar.lower() != "s":
+                    raise ContinueError
+                break
+            except ContinueError:
+                print("Digite apenas S para continuar\n")
+
         for i in range(jogadores):
             if verifica_ganhador(cartelas[i]):
-                vencedor = jogadores_etiquetas[i]
-                break
+                print(f"Parabéns ao {jogadores_etiquetas[i]} por vencer o jogo!")
+                nome_ganhador = input("Drum roll, por favor... Quem é o mestre do Bingorama? (Insira seu nome triunfante): ")
+                print("\n")
 
-        continuar = input("Digite S para continuar: ")
-        print()
-        if continuar.lower() != "s":
-            break
-    
-    print(f"Parabéns ao {vencedor} por vencer o jogo!")
-    
-
+                exibe_ranking(nome_ganhador)
+                return
+        
 
 def menume():    
     while True:
@@ -112,8 +149,8 @@ def menu():
 Digite a quantidade de jogadores abaixo
 OBS: Mínimo de jogadores: 1, Máximo de jogadores: 5 \n''')
     
+    
     jogadores = menume()
     game(jogadores)
-
-
+        
 menu()

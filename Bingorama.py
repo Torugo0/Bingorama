@@ -1,6 +1,7 @@
 # Import's usados
 import random 
 from random import sample
+import json
 
 # Exceções Personalizadas
 class VerificaError(Exception):
@@ -61,6 +62,35 @@ def verifica_ganhador(cartela):
 
     return False
 
+def criar_ranking(nome_ganhador):
+    try:
+        with open('./JSON/ranking.json', 'r', encoding='utf-8') as arquivo:
+            ranking = json.load(arquivo)
+    except FileNotFoundError:
+        ranking = {}
+
+    if nome_ganhador not in ranking:
+        ranking[nome_ganhador] = 1
+    else:
+        ranking[nome_ganhador] += 1
+    
+    with open('./JSON/ranking.json', 'w', encoding='utf-8') as arquivo:
+        json.dump(ranking, arquivo, indent=4, ensure_ascii=False)
+    
+    return ranking
+
+
+def exibe_ranking(nome_ganhador):
+    ranking = criar_ranking(nome_ganhador)
+
+    if ranking:
+        print("Ranking:")
+        for jogador, vitorias in sorted(ranking.items(), key=lambda item: item[1], reverse=True):
+            print(f"{jogador}\nVitórias: {vitorias}\n")
+    else:
+        print("O ranking está vazio.")
+
+
 def game(jogadores):
     jogadores_etiquetas = [f"Jogador {i + 1}" for i in range(jogadores)]
 
@@ -91,9 +121,11 @@ def game(jogadores):
             if verifica_ganhador(cartelas[i]):
                 print(f"Parabéns ao {jogadores_etiquetas[i]} por vencer o jogo!")
                 nome_ganhador = input("Drum roll, por favor... Quem é o mestre do Bingorama? (Insira seu nome triunfante): ")
-                # Pegar o nome do jogador e arquivar no json
-                # perguntar se quer continuar no jogo
+                print("\n")
+
+                exibe_ranking(nome_ganhador)
                 return
+        
 
 def menume():    
     while True:
@@ -117,8 +149,8 @@ def menu():
 Digite a quantidade de jogadores abaixo
 OBS: Mínimo de jogadores: 1, Máximo de jogadores: 5 \n''')
     
+    
     jogadores = menume()
     game(jogadores)
-
-
+        
 menu()
