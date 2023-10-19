@@ -1,3 +1,10 @@
+'''
+Integrantes:
+
+Vitor Hugo - 97758
+João Pedro de Souza - 99805
+'''
+
 # Import's usados
 import random 
 from random import sample
