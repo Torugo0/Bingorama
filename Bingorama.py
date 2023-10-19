@@ -69,10 +69,11 @@ def criar_ranking(nome_ganhador):
     except FileNotFoundError:
         ranking = {}
 
-    if nome_ganhador not in ranking:
-        ranking[nome_ganhador] = 1
-    else:
-        ranking[nome_ganhador] += 1
+    if nome_ganhador:
+        if nome_ganhador not in ranking:
+            ranking[nome_ganhador] = 1
+        else:
+            ranking[nome_ganhador] += 1
     
     with open('./JSON/ranking.json', 'w', encoding='utf-8') as arquivo:
         json.dump(ranking, arquivo, indent=4, ensure_ascii=False)
@@ -80,7 +81,7 @@ def criar_ranking(nome_ganhador):
     return ranking
 
 
-def exibe_ranking(nome_ganhador):
+def exibe_ranking(nome_ganhador = None):
     ranking = criar_ranking(nome_ganhador)
 
     if ranking:
@@ -88,7 +89,7 @@ def exibe_ranking(nome_ganhador):
         for jogador, vitorias in sorted(ranking.items(), key=lambda item: item[1], reverse=True):
             print(f"{jogador}\nVitórias: {vitorias}\n")
     else:
-        print("O ranking está vazio.")
+        print("O ranking está vazio.\n")
 
 
 def game(jogadores):
@@ -125,7 +126,7 @@ def game(jogadores):
 
                 exibe_ranking(nome_ganhador)
                 return
-        
+       
 
 def menume():    
     while True:
@@ -145,12 +146,33 @@ def menume():
     
 
 def menu():
-    print('''Bem-vindo ao Bingorama!!
-Digite a quantidade de jogadores abaixo
+    opcao = 0
+    
+    while opcao != 3:
+        try:
+            print('''Bem vindo ao Bingorama !! \n
+1- Iniciar jogo
+2- Exibir ranking
+3- Sair do jogo\n''')
+
+            opcao = int(input("Escolha uma opção: "))
+            if opcao <= 0 or opcao > 3:
+                    raise VerificaError
+            print("\n")
+            
+            if opcao == 1:
+                print('''Digite a quantidade de jogadores abaixo
 OBS: Mínimo de jogadores: 1, Máximo de jogadores: 5 \n''')
-    
-    
-    jogadores = menume()
-    game(jogadores)
+                jogadores = menume()
+                game(jogadores)
+            elif opcao == 2:
+                exibe_ranking()
+            elif opcao == 3:
+                print("Obrigado por jogar Bingorama")
+                break
+        except ValueError:
+                print("O valor informado não é um número \n")
+        except VerificaError:
+            print("Digite apenas as opções exibidas em tela \n")
         
 menu()
