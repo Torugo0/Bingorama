@@ -125,7 +125,7 @@ def game(jogadores):
         for i in range(jogadores):
             if verifica_ganhador(cartelas[i]):
                 print(f"Parabéns ao {jogadores_etiquetas[i]} por vencer o jogo!")
-                nome_ganhador = input("Drum roll, por favor... Quem é o mestre do Bingorama? (Insira seu nome triunfante): ")
+                nome_ganhador = input("Drum roll, por favor... Quem é o mestre do Bingorama? (Insira seu nome triunfante): ").title()
                 print("\n")
 
                 exibe_ranking(nome_ganhador)
